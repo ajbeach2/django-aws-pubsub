@@ -15,7 +15,7 @@ setup(
     python_requires='>=3.7',
     include_package_data=True,
     install_requires=[
-        "django>=2.2",
+        "django>=2.2.3",
         "boto3>=1.9.181"
     ],
     license='MIT License',  # example license

@@ -4,22 +4,36 @@ jobs:
     docker:
      - image: circleci/python:3.7.3
     working_directory: ~/app
-
     steps:
-      - checkout
-      
+      - checkout  
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.7/site-packages
+      - restore_cache:  
+          key: v1-{{ .Branch }}-{{ checksum "requirements.txt" }}    
       - run:
-        pip install tox codecov
-
+          name: Install dependencies
+          command: |
+            sudo pip install tox codecov
       - run:
-          name: run tests
+          name: Run tests
           command: |
             tox
+      - run:
+          name: Run linter
+          command: |
+            tox -e pylint
+
+      - save_cache:
+          key: v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          paths:
+            - ".tox"
+            - ".venv"
+            - "/usr/local/bin"
+            - "/usr/local/lib/python3.7/site-packages"
       - run:
           name: Update coverage
           command: |
             codecov
           when: on_success
-
       - store_artifacts:
           path: .coverage
