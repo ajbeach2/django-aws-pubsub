@@ -1,5 +1,7 @@
 # Created by https://www.gitignore.io
 
+venv/
+
 ### OSX ###
 .DS_Store
 .AppleDouble
@@ -74,6 +76,7 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+docs/build/
 
 # PyBuilder
 target/
@@ -87,4 +90,8 @@ __pycache__/
 local_settings.py
 
 .env
-db.sqlite3
+*.sqlite3
+
+*.swp
+build/
+*.egg-info

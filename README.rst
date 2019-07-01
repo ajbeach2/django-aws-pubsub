@@ -4,18 +4,57 @@ Aws Pubsub
 
 Aws Pubsub is a  Django app add pubsub workers with sqs + sns
 
-Detailed documentation is in the "docs" directory.
-
 Quick start
 -----------
 
-1. Add "polls" to your INSTALLED_APPS setting like this::
+1. Add "aws_pubsub" to your INSTALLED_APPS setting like this::
 
-    INSTALLED_APPS = [
+	INSTALLED_APPS = [
         ...
         'aws_pubsub',
     ]
 
-2. Create Tasks in a tasks.py file in yoru proejct root::
+2. Configure your sqs queue and (optionally) set the sns topic in settings.py. The topic and queue will be created if they do not exists. The queue will subscribe to the topic by default. See `boto3 <https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.html>`_ for details on setting up credentials with AWS::
 
-    TODO: example,
+	WORKER_CONFIG = {
+		"QUEUE_NAME": "worker-queue",
+		"TOPIC_NAME": "worker-topic"
+	}
+
+
+3. Create Tasks in a tasks.py file in your Django app and register them. You my optionally pass a global alias for your task::
+
+	from aws_pubsub import register
+
+	def foo(message: dict):
+	    print("fooooooooooooooooooooooo")
+
+	def bar(message: dict):
+	    value = message["Value"]
+	    return value * 10
+
+	register(foo, alias="foo")
+	register(bar)
+
+
+4. Enqueue your tasks. To enqueue a task, use the global alias or the absolute module path.  A delay in seconds my also be passed::
+
+	from aws_pubsub import send_task
+
+	send_task("foo", {})
+	send_task("myapp.tasks.bar", {"Value": 10}, delay=10)
+
+
+5. Run tasks sync from a REST endpoint. This is compatible with `AWS Elasticbean Stalk Worker Environments <https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features-managing-env-tiers.html>`_. Add the following to your urls.py. Note: This route is unauthenticated and disables CSRF tokens.::
+
+	...
+	urlpatterns = [
+		...
+    	path("task", include("aws_pubsub.urls")),
+	]
+
+6. Running Task Worker from the command line
+
+workers argument defaults to number of cpu * 2. You may pass in a value for workers to set the desired concurrency.::
+
+	./manage.py runworker --workers 8
