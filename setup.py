@@ -14,7 +14,7 @@ setup(
     packages=["aws_pubsub"],
     python_requires=">=3.8",
     include_package_data=True,
-    install_requires=["django>=3.0.0", "boto3"],
+    install_requires=["django>=3.0.1", "boto3"],
     license="MIT License",  # example license
     test_suite="runtests",
     description="A Django app implement pubsub workers",
