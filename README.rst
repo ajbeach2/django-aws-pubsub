@@ -2,7 +2,7 @@
 Aws Pubsub
 =====
 
-Aws Pubsub is a  Django app add pubsub workers with sqs + sns
+AwsPubsub is a  Django app for asyncronous background tasks leverageing SQS. AwsPubSub also supports Elastic Beanstalk Worker environments.
 
 Quick start
 -----------
@@ -11,7 +11,7 @@ Quick start
 
 	INSTALLED_APPS = [
         ...
-        'aws_pubsub',
+        "aws_pubsub",
     ]
 
 2. Configure your sqs queue and (optionally) set the sns topic in settings.py. The topic and queue will be created if they do not exists. The queue will subscribe to the topic by default. See `boto3 <https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.html>`_ for details on setting up credentials with AWS::
