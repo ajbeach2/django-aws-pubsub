@@ -19,7 +19,7 @@ jobs:
         pip install tox
     - uses: actions/cache@v1
       with:
-        path: ~/.tox
+        path: .tox
         key: ${{ runner.os }}-tox-${{ hashFiles('**/tox.ini') }}
         restore-keys: |
           ${{ runner.os }}-tox-:
