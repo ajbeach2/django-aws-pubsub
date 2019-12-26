@@ -4,6 +4,9 @@ Aws Pubsub
 
 AwsPubsub is a  Django app for asyncronous background tasks leverageing SQS. AwsPubSub also supports Elastic Beanstalk Worker environments.
 
+.. image:: https://img.shields.io/github/release/ajbeach2/django-aws-pubsub.svg
+	:alt: Latest Release
+
 Quick start
 -----------
 
