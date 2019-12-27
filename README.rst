@@ -22,7 +22,7 @@ AwsPubsub is a  Django app for asyncronous background tasks leverageing SQS. Aws
 Why AwsPubSub?
 -------------
 
-This focus of this package is simplicitly, there are many other task queue libraries for django or python, but this package is designed around these goals:
+This focus of this package is simplicitly. There are many other task queue libraries for django or python that have a lot more features. This package is strictly for running distriubted tasks, with the following goals:
 
 1. Better interoperability as tasks can be triggered by sending messages directly to SQS
 2. First class support for `AWS Elasticbean Stalk Worker Environments <https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features-managing-env-tiers.html>`_
