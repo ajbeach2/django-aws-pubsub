@@ -1,5 +1,5 @@
 =====
-Aws Pubsub
+AwsPubsub
 =====
 
 AwsPubsub is a  Django app for asyncronous background tasks leverageing SQS. AwsPubSub also supports Elastic Beanstalk Worker environments. 
