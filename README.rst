@@ -7,7 +7,7 @@ AwsPubsub is a  Django app for asyncronous background tasks leverageing SQS and 
 |B| |R| |L| |M| |C|
 
 .. |B| image:: https://github.com/ajbeach2/django-aws-pubsub/workflows/Build/badge.svg
-   :target: https://circleci.com/gh/ajbeach2/django-aws-pubsub/actions
+   :target: https://github.com/ajbeach2/django-aws-pubsub/actions
 .. |R| image:: https://img.shields.io/github/release/ajbeach2/django-aws-pubsub.svg
    :alt: Latest Release
 .. |L| image:: https://img.shields.io/badge/License-MIT-yellow.svg
