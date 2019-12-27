@@ -6,8 +6,8 @@ AwsPubsub is a  Django app for asyncronous background tasks leverageing SQS. Aws
 
 |B| |R| |L| |M| |C|
 
-.. |B| image::https://github.com/ajbeach2/django-aws-pubsub/workflows/Build/badge.svg
-    :target: https://circleci.com/gh/ajbeach2/django-aws-pubsub/actions
+.. |B| image:: https://github.com/ajbeach2/django-aws-pubsub/workflows/Build/badge.svg
+   :target: https://circleci.com/gh/ajbeach2/django-aws-pubsub/actions
 .. |R| image:: https://img.shields.io/github/release/ajbeach2/django-aws-pubsub.svg
    :alt: Latest Release
 .. |L| image:: https://img.shields.io/badge/License-MIT-yellow.svg
@@ -86,5 +86,3 @@ workers argument defaults to number of cpu * 2. You may pass in a value for work
 
 	python manage.py runworker --workers 8
 
-
-https://github.com/ajbeach2/django-aws-pubsub//workflows/{workflow_name}/badge.svg
