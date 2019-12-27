@@ -51,7 +51,7 @@ Quick start
 	}
 
 
-3. Create Tasks in a tasks.py file in your Django app and register them. Optionally pass a global alias for the task.
+3. Create Tasks in a tasks.py file in your Django app and register them. Optionally pass a global alias for the task.  Valid tasks only support a JSON serializable dictionary.
 
 .. code:: python
 
