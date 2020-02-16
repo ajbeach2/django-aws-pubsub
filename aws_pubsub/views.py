@@ -14,6 +14,7 @@ class TaskView(View):
     """TaskView to start tasks via REST."""
 
     def post(self, request):
+        # Means this is a periodic task, which will have an empty body
         if 'HTTP_X_AWS_SQSD_TASKNAME' in request.META:
             task_data = {
                 "Type": request.META["HTTP_X_AWS_SQSD_TASKNAME"]
