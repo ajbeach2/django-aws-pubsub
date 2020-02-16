@@ -25,7 +25,10 @@ def process_task(body: dict) -> Tuple[str, int]:
     result = func(body)
     end = process_time()
 
-    return result, (end - start) * 1000,
+    return (
+        result,
+        (end - start) * 1000,
+    )
 
 
 def process(message: dict) -> Tuple[str, Any]:

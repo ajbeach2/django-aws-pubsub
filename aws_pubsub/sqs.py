@@ -18,7 +18,9 @@ class Sqs(object):
         self.user_mode = settings.WORKER_CONFIG.get("USER_MODE", False)
         self.region = settings.WORKER_CONFIG.get("REGION", "us-east-1")
         self._queue_name = settings.WORKER_CONFIG["QUEUE_NAME"]
-        self._deadletter_queue_name = settings.WORKER_CONFIG.get("DEADLETTER_QUEUE_NAME", None)
+        self._deadletter_queue_name = settings.WORKER_CONFIG.get(
+            "DEADLETTER_QUEUE_NAME", None
+        )
         self.sqs_client = boto3.client("sqs", region_name=self.region)
 
         self.set_sns_topic(self.topic_name, region=self.region)

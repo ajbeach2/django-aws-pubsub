@@ -1,7 +1,5 @@
 """Task Management for aws_pubsub."""
-from .exceptions import (
-    TaskNotFound, InvalidTaskRegistry, InvalidTaskFunciontDefinition
-)
+from .exceptions import TaskNotFound, InvalidTaskRegistry, InvalidTaskFunciontDefinition
 
 
 class TaskManager(object):
@@ -26,8 +24,7 @@ class TaskManager(object):
                 or task.__annotations__.get("message", object).__name__ != "dict"
             ):
                 raise InvalidTaskFunciontDefinition(
-                    "%s Task signature must match: def mytask(message: dict)" % (
-                        key)
+                    "%s Task signature must match: def mytask(message: dict)" % (key)
                 )
 
             else:

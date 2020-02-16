@@ -15,10 +15,8 @@ class TaskView(View):
 
     def post(self, request):
         # Means this is a periodic task, which will have an empty body
-        if 'HTTP_X_AWS_SQSD_TASKNAME' in request.META:
-            task_data = {
-                "Type": request.META["HTTP_X_AWS_SQSD_TASKNAME"]
-            }
+        if "HTTP_X_AWS_SQSD_TASKNAME" in request.META:
+            task_data = {"Type": request.META["HTTP_X_AWS_SQSD_TASKNAME"]}
         else:
             task_data = json.loads(request.body)
 
