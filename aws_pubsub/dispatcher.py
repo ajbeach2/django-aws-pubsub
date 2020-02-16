@@ -17,6 +17,17 @@ def _get_task_input(msg: dict, msg_type: str) -> dict:
     return msg
 
 
+def process_task(body: dict) -> Tuple[str, int]:
+    """ TODO: refactor to not repeat code."""
+    task_name = body.get("Type", None)
+    func = get_task(task_name)
+    start = process_time()
+    result = func(body)
+    end = process_time()
+
+    return result, (end - start) * 1000,
+
+
 def process(message: dict) -> Tuple[str, Any]:
     """Process a task message.
 

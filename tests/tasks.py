@@ -10,5 +10,10 @@ def bar(message: dict):
     return value * 10
 
 
+def duck(message: dict):
+    return "quack"
+
+
 register(foo, alias="foo")
 register(bar, alias="bar")
+register(duck)
