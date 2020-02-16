@@ -18,6 +18,9 @@ class Sqs(object):
         self.user_mode = settings.WORKER_CONFIG.get("USER_MODE", False)
         self.region = settings.WORKER_CONFIG.get("REGION", "us-east-1")
         self._queue_name = settings.WORKER_CONFIG["QUEUE_NAME"]
+        self._deadletter_queue_name = settings.WORKER_CONFIG.get(
+            "DEADLETTER_QUEUE_NAME", None
+        )
         self.sqs_client = boto3.client("sqs", region_name=self.region)
 
         self.set_sns_topic(self.topic_name, region=self.region)
@@ -98,6 +101,8 @@ class Sqs(object):
             return self._queue_name
 
     def get_queue_deadletter(self):
+        if self._deadletter_queue_name:
+            return self._deadletter_queue_name
         return self.queue_name + "-deadletter"
 
     def get_user_mode_queue_key(self, key):
@@ -121,7 +126,7 @@ class Sqs(object):
         sqs = boto3.client("sqs", region_name=region)
         sns = boto3.client("sns", region_name=region)
 
-        dead_name = "{0}-deadletter".format(queue_name)
+        dead_name = self.get_queue_deadletter()
         queue = sqs.create_queue(QueueName=queue_name)
         deadletter = sqs.create_queue(QueueName=dead_name)
         dead_attrs = sqs.get_queue_attributes(

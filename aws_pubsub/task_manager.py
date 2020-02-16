@@ -1,22 +1,5 @@
 """Task Management for aws_pubsub."""
-
-
-class InvalidTaskFunciontDefinition(Exception):
-    """Exception for invalid tasks."""
-
-    pass
-
-
-class InvalidTaskRegistry(Exception):
-    """Task Registration Exception."""
-
-    pass
-
-
-class TaskNotFound(Exception):
-    """Task not found Exception."""
-
-    pass
+from .exceptions import TaskNotFound, InvalidTaskRegistry, InvalidTaskFunciontDefinition
 
 
 class TaskManager(object):
@@ -27,21 +10,25 @@ class TaskManager(object):
         self._registry = {}
 
     def _register(self, task, alias=None):
-        key = alias or "%s.%s" % (task.__module__, task.__name__)
 
-        if key in self._registry:
-            raise InvalidTaskRegistry("%s task alias already exists!" % key)
+        keys = ["%s.%s" % (task.__module__, task.__name__)]
+        if alias:
+            keys.append(alias)
 
-        if (
-            len(task.__annotations__) != 1
-            or task.__annotations__.get("message", object).__name__ != "dict"
-        ):
-            raise InvalidTaskFunciontDefinition(
-                "%s Task signature must match: def mytask(message: dict)" % (key)
-            )
+        for key in keys:
+            if key in self._registry:
+                raise InvalidTaskRegistry("%s task already exists!" % key)
 
-        else:
-            self._registry[key] = task
+            if (
+                len(task.__annotations__) != 1
+                or task.__annotations__.get("message", object).__name__ != "dict"
+            ):
+                raise InvalidTaskFunciontDefinition(
+                    "%s Task signature must match: def mytask(message: dict)" % (key)
+                )
+
+            else:
+                self._registry[key] = task
 
     def _get_task(self, func):
         task = self._registry.get(func, None)
