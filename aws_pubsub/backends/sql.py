@@ -1,6 +1,5 @@
 import sqlite3
 import time
-import json
 
 from .base import BackendWrapperBase
 
@@ -30,12 +29,14 @@ class BackendWrapper(BackendWrapperBase):
 
     def expire(self):
         self.c.execute(
-            '''
+            """
                 DELETE FROM queue
                 where (lastupdated - :lastupdated) > :timeout
                 and processing = 'true'
                 or count > 10
-            ''', {"lastupdated": int(time.time()), "timeout": self.timeout})
+            """,
+            {"lastupdated": int(time.time()), "timeout": self.timeout},
+        )
         self.conn.commit()
 
     def send_task(self, messages, task_name, delay=None):
@@ -44,15 +45,13 @@ class BackendWrapper(BackendWrapperBase):
                 """
                     INSERT into queue (task,processing, message, lastupdated)
                     VALUES(?, 'false', ?, ?);""",
-                (task_name,
-                message["MessageBody"],
-                int(time.time())),
+                (task_name, message["MessageBody"], int(time.time())),
             )
             self.conn.commit()
 
     def recieve(self):
         self.expire()
-        # time.sleep(self.poll_interval)
+        time.sleep(self.poll_interval)
         self.c.execute(
             """
             SELECT * from queue limit ?;
@@ -69,16 +68,11 @@ class BackendWrapper(BackendWrapperBase):
         )
         self.conn.commit()
 
-        return [{
-            "MessageId": m[0],
-            "ReceiptHandle": m[0],
-            "Body": m[3],
-        } for m in rows]
+        return [{"MessageId": m[0], "ReceiptHandle": m[0], "Body": m[3],} for m in rows]
 
     def ack_messages(self, receipts):
         self.c.execute(
-            "DELETE FROM queue where id in (%s);"
-            % ",".join("?" * len(receipts)),
+            "DELETE FROM queue where id in (%s);" % ",".join("?" * len(receipts)),
             receipts,
         )
         self.conn.commit()
@@ -86,5 +80,3 @@ class BackendWrapper(BackendWrapperBase):
     def query(self, query):
         self.c.execute(query)
         print(self.c.fetchall())
-
-

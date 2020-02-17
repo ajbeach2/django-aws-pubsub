@@ -16,6 +16,4 @@ class BackendWrapperBase(object):
         return entries
 
     def enqueue(self, messages, task, delay=None):
-        self.send_task(messages,
-                       "%s.%s" % (task.__module__, task.__name__),
-                       delay)
+        self.send_task(messages, "%s.%s" % (task.__module__, task.__name__), delay)

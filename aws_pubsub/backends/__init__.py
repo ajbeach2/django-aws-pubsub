@@ -5,11 +5,7 @@ from django.conf import settings
 from django.utils.functional import LazyObject
 
 
-__all__ = ["enqueue",
-           "queue_name",
-           "send_task",
-           "get_messages",
-           "ack_messages"]
+__all__ = ["enqueue", "queue_name", "send_task", "get_messages", "ack_messages"]
 
 
 def load_backend(backend_name):
@@ -18,12 +14,12 @@ def load_backend(backend_name):
     backend name, or raise an error if it doesn't exist.
     """
     try:
-        return import_module('%s' % backend_name)
+        return import_module("%s" % backend_name)
     except ImportError as e_user:
         raise ImproperlyConfigured(
             "%r isn't an available aws_pubsub backend.\n"
             "Try using 'aws_pubsub.backends.XXX', where XXX is one of:\n"
-            "    %s" % (backend_name, ", ".join(['sqs', 'sql']))
+            "    %s" % (backend_name, ", ".join(["sqs", "sql"]))
         ) from e_user
 
 

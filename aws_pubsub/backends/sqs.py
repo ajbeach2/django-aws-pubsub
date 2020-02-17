@@ -30,8 +30,7 @@ class BackendWrapper(BackendWrapperBase):
         self.set_sqs_queue(self.queue_name, self.topic)
 
     def ack_messages(self, receipts, max_retries=10):
-        entries = [{"Id": str(k), "ReceiptHandle": v}
-                   for k, v in enumerate(receipts)]
+        entries = [{"Id": str(k), "ReceiptHandle": v} for k, v in enumerate(receipts)]
 
         if not any(entries):
             return
@@ -43,8 +42,7 @@ class BackendWrapper(BackendWrapperBase):
         failed = response.get("Failed", [])
 
         while len(failed) and max_retries > 0:
-            retry = [{"Id": x["Id"], "ReceiptHandle": entries[x["Id"]]}
-                     for x in failed]
+            retry = [{"Id": x["Id"], "ReceiptHandle": entries[x["Id"]]} for x in failed]
             response = self.sqs_client.delete_message_batch(
                 QueueUrl=self.queue, Entries=retry
             )
