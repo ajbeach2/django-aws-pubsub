@@ -5,16 +5,19 @@ import logging
 
 import boto3
 from django.conf import settings
-from django.utils.functional import LazyObject, cached_property
+from django.utils.functional import cached_property
+
+from .base import BackendWrapperBase
 
 logger = logging.getLogger("default")
 
 
-class Sqs(object):
+class BackendWrapper(BackendWrapperBase):
     """SQS Management class."""
 
     def __init__(self):
         self.topic_name = settings.WORKER_CONFIG["TOPIC_NAME"]
+        self.sync_mode = settings.WORKER_CONFIG.get("SYNC_MODE", False)
         self.user_mode = settings.WORKER_CONFIG.get("USER_MODE", False)
         self.region = settings.WORKER_CONFIG.get("REGION", "us-east-1")
         self._queue_name = settings.WORKER_CONFIG["QUEUE_NAME"]
@@ -27,7 +30,8 @@ class Sqs(object):
         self.set_sqs_queue(self.queue_name, self.topic)
 
     def ack_messages(self, receipts, max_retries=10):
-        entries = [{"Id": str(k), "ReceiptHandle": v} for k, v in enumerate(receipts)]
+        entries = [{"Id": str(k), "ReceiptHandle": v}
+                   for k, v in enumerate(receipts)]
 
         if not any(entries):
             return
@@ -39,7 +43,8 @@ class Sqs(object):
         failed = response.get("Failed", [])
 
         while len(failed) and max_retries > 0:
-            retry = [{"Id": x["Id"], "ReceiptHandle": entries[x["Id"]]} for x in failed]
+            retry = [{"Id": x["Id"], "ReceiptHandle": entries[x["Id"]]}
+                     for x in failed]
             response = self.sqs_client.delete_message_batch(
                 QueueUrl=self.queue, Entries=retry
             )
@@ -50,31 +55,10 @@ class Sqs(object):
         # TODO: Build this out
 
     def send_task(self, messages, task_name, delay=None):
-        entries = []
-        for _id, message in enumerate(messages):
-            message["Type"] = task_name
-
-            msg = {"Id": "{}".format(_id), "MessageBody": json.dumps(message)}
-
-            if delay:
-                msg["DelaySeconds"] = delay
-
-            entries.append(msg)
-
         response = self.sqs_client.send_message_batch(
-            QueueUrl=self.queue, Entries=entries
+            QueueUrl=self.queue, Entries=self.prepare_messages(messages)
         )
         logger.info(json.dumps(response))
-
-    def enqueue(self, messages, task, delay=None):
-        """Enqeue messages to sqs.
-
-        Args:
-        messages (list(dict): Messages to qneue
-        task (function): task function
-        delay (:obj: int, optional): Delay in seconds
-        """
-        self.send_task(messages, "%s.%s" % (task.__module__, task.__name__), delay)
 
     @cached_property
     def username(self):
@@ -176,31 +160,3 @@ class Sqs(object):
         )
 
         self.queue = queue["QueueUrl"]
-
-
-class SqsBackend(LazyObject):
-    def _setup(self):
-        self._wrapped = Sqs()
-
-
-backend = SqsBackend()
-
-
-def enqueue(messages, task, delay=None):
-    backend.enqueue(messages, task, delay)
-
-
-def send_task(messages, task_name, delay=None):
-    backend.send_task(messages, task_name, delay)
-
-
-def ack_messages(receipts):
-    backend.ack_messages(receipts)
-
-
-def queue_name():
-    return backend.queue_name
-
-
-def get_messages():
-    return backend.recieve()

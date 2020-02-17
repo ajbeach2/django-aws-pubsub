@@ -24,6 +24,7 @@ INSTALLED_APPS = [
 ]
 
 WORKER_CONFIG = {
+    "BACKEND": "aws_pubsub.backends.sql",
     "QUEUE_NAME": "pubsub-test",
     "TOPIC_NAME": "dev-ingestion",
     "USER_MODE": True,
