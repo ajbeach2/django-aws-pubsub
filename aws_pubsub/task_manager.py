@@ -45,7 +45,8 @@ def register(f, alias=None):
 
     Args:
         f (function): Task function object
-        alias (str): Global alias for task    """
+        alias (str): Global alias for task
+    """
 
     manager._register(f, alias)
 

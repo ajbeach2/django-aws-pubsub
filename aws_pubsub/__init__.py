@@ -2,10 +2,10 @@
 
 from django.utils.module_loading import autodiscover_modules
 
-from aws_pubsub.sqs import enqueue, queue_name, send_task
+from aws_pubsub.backends import enqueue, send_task
 from aws_pubsub.task_manager import manager, register
 
-__all__ = ["enqueue", "queue_name", "register", "send_task"]
+__all__ = ["enqueue", "register", "send_task"]
 
 
 def autodiscover():

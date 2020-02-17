@@ -95,3 +95,5 @@ local_settings.py
 *.swp
 build/
 *.egg-info
+
+*.db

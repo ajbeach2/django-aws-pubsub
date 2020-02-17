@@ -5,7 +5,7 @@ import multiprocessing
 
 from django import db
 
-from aws_pubsub.sqs import ack_messages, get_messages
+from aws_pubsub.backends import ack_messages, get_messages
 from aws_pubsub.dispatcher import dispatch
 
 logger = logging.getLogger("default")
@@ -34,7 +34,7 @@ class MultiProcessConsumer(multiprocessing.Process):
             while x < self.max_tasks_per_child:
                 messages = get_messages()
                 if messages:
-                    recipt_handles = dispatch(messages)
+                    recipt_handles, _ = dispatch(messages)
                     ack_messages(recipt_handles)
                 db.reset_queries()
                 x += 1
@@ -43,3 +43,15 @@ class MultiProcessConsumer(multiprocessing.Process):
             return
         except (KeyboardInterrupt, SystemExit):
             logger.warning("Consumer %s shutting down...", self.id)
+
+
+class Consumer(object):
+    def run(cls):
+        """Starts the process"""
+
+        messages = get_messages()
+        if messages:
+            recipt_handles, _ = dispatch(messages)
+            ack_messages(recipt_handles)
+
+        return recipt_handles

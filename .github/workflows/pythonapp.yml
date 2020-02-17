@@ -36,3 +36,10 @@ jobs:
     - name: Run Tests
       run: |
         tox -e=py38
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: .coverage
+        flags: unittests
+        fail_ci_if_error: true
