@@ -5,9 +5,9 @@ from .base import BackendWrapperBase
 
 
 class BackendWrapper(BackendWrapperBase):
-    def __init__(self, limit=10, timeout=60, poll_interval=20):
+    def __init__(self, limit=10, timeout=60, poll_interval=5):
         self.limit = limit
-        self.poll_interval = 20
+        self.poll_interval = poll_interval
         self.timeout = timeout
         self.conn = sqlite3.connect("queue.db")
         self.c = self.conn.cursor()
@@ -54,7 +54,7 @@ class BackendWrapper(BackendWrapperBase):
         time.sleep(self.poll_interval)
         self.c.execute(
             """
-            SELECT * from queue limit ?;
+            SELECT * from queue where processing = 'false' limit ?;
             """,
             (self.limit,),
         )
