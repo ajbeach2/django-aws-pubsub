@@ -5,7 +5,7 @@ from django.conf import settings
 from django.utils.functional import LazyObject
 
 
-__all__ = ["enqueue", "queue_name", "send_task", "get_messages", "ack_messages"]
+__all__ = ["enqueue", "send_task", "get_messages", "ack_messages"]
 
 
 def load_backend(backend_name):
@@ -37,19 +37,29 @@ backend = Backend()
 
 
 def enqueue(messages, task, delay=None):
+    """Send a task to the qeue.
+
+    Args:
+        messages (list(dict)): Task function
+        task (function): Task function to queue
+        delay (number): Delay to send message
+    """
     backend.enqueue(messages, task, delay)
 
 
 def send_task(messages, task_name, delay=None):
+    """Send a task to the qeue.
+
+    Args:
+        messages (list(dict)): List of messages to send to the queue
+        task_name (str): Import path string of task
+        delay (number): Delay to send message
+    """
     backend.send_task(messages, task_name, delay)
 
 
 def ack_messages(receipts):
     backend.ack_messages(receipts)
-
-
-def queue_name():
-    return backend.queue_name
 
 
 def get_messages():

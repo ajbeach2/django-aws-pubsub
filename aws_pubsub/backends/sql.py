@@ -24,9 +24,6 @@ class BackendWrapper(BackendWrapperBase):
         )
         self.conn.commit()
 
-    def queue_name(self):
-        return "queue"
-
     def expire(self):
         self.c.execute(
             """
@@ -76,7 +73,3 @@ class BackendWrapper(BackendWrapperBase):
             receipts,
         )
         self.conn.commit()
-
-    def query(self, query):
-        self.c.execute(query)
-        print(self.c.fetchall())

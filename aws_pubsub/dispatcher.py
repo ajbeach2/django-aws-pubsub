@@ -85,6 +85,7 @@ def dispatch(messages: List[dict]):
         list(string): Reciept handles if they exist
     """
     receipt_handles = []
+    results = []
 
     for message in messages:
         try:
@@ -107,4 +108,4 @@ def dispatch(messages: List[dict]):
         if receipt_handle:
             receipt_handles.append(receipt_handle)
 
-    return receipt_handles
+    return receipt_handles, results

@@ -54,7 +54,8 @@ class BackendWrapper(BackendWrapperBase):
 
     def send_task(self, messages, task_name, delay=None):
         response = self.sqs_client.send_message_batch(
-            QueueUrl=self.queue, Entries=self.prepare_messages(messages)
+            QueueUrl=self.queue,
+            Entries=self.prepare_messages(messages, task_name, delay=delay),
         )
         logger.info(json.dumps(response))
 

@@ -34,7 +34,7 @@ class MultiProcessConsumer(multiprocessing.Process):
             while x < self.max_tasks_per_child:
                 messages = get_messages()
                 if messages:
-                    recipt_handles = dispatch(messages)
+                    recipt_handles, _ = dispatch(messages)
                     ack_messages(recipt_handles)
                 db.reset_queries()
                 x += 1
@@ -48,10 +48,10 @@ class MultiProcessConsumer(multiprocessing.Process):
 class Consumer(object):
     def run(cls):
         """Starts the process"""
-        db.connections.close_all()
 
         messages = get_messages()
         if messages:
-            recipt_handles = dispatch(messages)
+            recipt_handles, _ = dispatch(messages)
             ack_messages(recipt_handles)
-        db.reset_queries()
+
+        return recipt_handles
