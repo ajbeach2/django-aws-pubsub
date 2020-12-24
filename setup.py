@@ -10,11 +10,11 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name="django-aws-pubsub",
-    version="0.1.0",
+    version="0.2.0",
     packages=["aws_pubsub"],
     python_requires=">=3.8",
     include_package_data=True,
-    install_requires=["django>=3.0.3", "boto3"],
+    install_requires=["django>=3.1.4", "boto3"],
     license="MIT License",  # example license
     test_suite="runtests",
     description="A Django app implement pubsub workers",
