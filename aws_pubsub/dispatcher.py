@@ -11,6 +11,10 @@ from .task_manager import get_task
 logger = logging.getLogger("default")
 
 
+def _get_task_name(obj):
+    return obj.get("Type", obj.get("Task", None))
+
+
 def _get_task_input(msg: dict, msg_type: str) -> dict:
     if msg_type == "Notification":
         return json.loads(msg.get("Message", None))
@@ -19,7 +23,7 @@ def _get_task_input(msg: dict, msg_type: str) -> dict:
 
 def process_task(body: dict) -> Tuple[str, int]:
     """ TODO: refactor to not repeat code."""
-    task_name = body.get("Type", None)
+    task_name = _get_task_name(body)
     func = get_task(task_name)
     start = process_time()
     result = func(body)
@@ -40,10 +44,10 @@ def process(message: dict) -> Tuple[str, Any]:
         (str, :obj): recipte handle and result
     """
     msg = json.loads(message["Body"])
-    msg_type = msg.get("Type", None)
+    msg_type = _get_task_name(msg)
 
     task_input = _get_task_input(msg, msg_type)
-    task_name = task_input.get("Type", None)
+    task_name = _get_task_name(task_input)
 
     func = get_task(task_name)
 
