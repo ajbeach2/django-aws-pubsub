@@ -12,11 +12,15 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "task", nargs=1, help="Task Name",
+            "task",
+            nargs=1,
+            help="Task Name",
         )
 
         parser.add_argument(
-            "payload", nargs="+", help="Task Payload(s)",
+            "payload",
+            nargs="+",
+            help="Task Payload(s)",
         )
 
     def handle(self, *args, **options):

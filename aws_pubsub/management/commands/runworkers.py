@@ -34,7 +34,9 @@ class Command(BaseCommand):
         while True:
             consumers = [
                 MultiProcessConsumer(i, self.max_tasks_per_child)
-                for i in range(self.workers,)
+                for i in range(
+                    self.workers,
+                )
             ]
             for w in consumers:
                 w.start()
