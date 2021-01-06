@@ -10,7 +10,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name="django-aws-pubsub",
-    version="0.2.0",
+    version="0.2.1",
     packages=["aws_pubsub"],
     python_requires=">=3.8",
     include_package_data=True,
