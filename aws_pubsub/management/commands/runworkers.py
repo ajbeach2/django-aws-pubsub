@@ -1,5 +1,6 @@
 import multiprocessing
 
+from django import db
 from django.core.management.base import BaseCommand
 
 from aws_pubsub.consumers import MultiProcessConsumer
@@ -32,6 +33,8 @@ class Command(BaseCommand):
         # Restart processes when max tasks is reached
         # python hack to free memory on long running processes
         while True:
+            # close all db connections prior to forks
+            db.connections.close_all()
             consumers = [
                 MultiProcessConsumer(i, self.max_tasks_per_child)
                 for i in range(
