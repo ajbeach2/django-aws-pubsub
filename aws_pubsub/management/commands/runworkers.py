@@ -11,14 +11,16 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
             "--workers",
-            default=multiprocessing.cpu_count() * 2,
+            default=multiprocessing.cpu_count(),
             help="Run workers in debug mode",
+            type=int,
         )
 
         parser.add_argument(
             "--max_tasks_per_child",
             default=10000,
             help="Number of gets before workers processes are respawned",
+            type=int,
         )
 
     # http://jtushman.github.io/blog/2014/01/14/python-%7C-multiprocessing-and-interrupts/
