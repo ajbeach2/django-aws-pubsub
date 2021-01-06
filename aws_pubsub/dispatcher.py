@@ -43,15 +43,19 @@ def process(message: dict) -> Tuple[str, Any]:
     Returns:
         (str, :obj): recipte handle and result
     """
-    msg = json.loads(message["Body"])
-    msg_type = _get_task_name(msg)
+    body = json.loads(message["Body"])
+    source = body.get("Type", None)
 
-    task_input = _get_task_input(msg, msg_type)
-    task_name = _get_task_name(task_input)
+    # if source is sns do extra message key
+    if source == "Notification":
+        body = json.loads(body.get("Message", None))
+
+    task_input = body.get("Message", {})
+    task_name = task_input.get("Task", None)
 
     func = get_task(task_name)
 
-    logger.info(
+    logger.debug(
         {
             "message_id": message["MessageId"],
             "event": "worker.processing",
@@ -65,7 +69,7 @@ def process(message: dict) -> Tuple[str, Any]:
     result = func(task_input)
     end = process_time()
 
-    logger.info(
+    logger.debug(
         {
             "message_id": message["MessageId"],
             "event": "worker.success",
