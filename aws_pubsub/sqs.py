@@ -166,7 +166,7 @@ class Sqs(object):
             },
         )
 
-        filter_policy = {"worker-name": [queue_name]}
+        filter_policy = {"routing-key": [queue_name]}
 
         sns.subscribe(
             TopicArn=sns_arn,
